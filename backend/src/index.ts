@@ -5,7 +5,7 @@ import compression from "compression";
 import cors from "cors";
 import { swaggerUi, swaggerDocs } from './docs/swagger';
 import passport from "passport";
-import session from "express-session";
+import cookieSession from "cookie-session";
 import helmet from 'helmet';
 
 import router from './router'
@@ -31,14 +31,10 @@ class App {
     private configureMiddleware() {
         this.app.use(cors({ credentials: true }));
         this.app.use(compression());
-        this.app.use(session({
-            secret: 'your_secret_key',
-            resave: false,
-            saveUninitialized: false,
-            cookie: {
-                secure: false,
-                maxAge: 24 * 60 * 60 * 1000
-            }
+        this.app.use(cookieSession({
+            name: 'session',
+            keys: ['my_secret_key'],
+            maxAge: 24 * 60 * 60 * 1000
         }));
         this.app.use(cookieParser());
         this.app.use(bodyParser.json());
